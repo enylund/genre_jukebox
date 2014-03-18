@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+
+
+        <style>
+            * {
+            margin: 0;
+            padding: 0;
+            }
+
+            body {
+            width:100%;
+            height:100%;
+            overflow:hidden;
+            }
+
+            #title {
+              position:fixed;
+              font-size:200px;
+            }
+            #layer_1 {
+              position:absolute;
+              left:<%= Math.floor(-10 + Math.random() * 90)%>%;
+              -webkit-animation:spin 4s linear infinite;
+              -moz-animation:spin 4s linear infinite;
+              animation:spin 4s linear infinite;
+              top: <%= Math.floor(-10 + Math.random() * 90)%>%;
+            }
+
+            #jukebox {
+            position:fixed;
+            right:2%;
+            top:2.6%;
+            font-size: 40px;
+            text-transform:uppercase;
+            font-weight:bold;
+            font-family:arial,helvetica,sans-serif;
+            }
+
+            #songTitle {
+              z-index:92;
+              position:fixed;
+              left:2%;
+              bottom:1%;
+              font-size: 20px;
+              width: 100%;
+              text-align:center;
+              font-weight:bold;
+              text-transform:uppercase;
+              font-family:arial, helvetica, sans-serif;
+              letter-spacing:-1px;
+            }
+
+            #next {
+              z-index:1000;
+            position: fixed;
+            font-size:20px;
+            bottom: 1%;
+            right:2%;
+
+            cursor:pointer;
+            }
+
+            #previous {
+            z-index:1000;
+            position: fixed;
+            font-size:20px;
+            bottom:1%;
+            left:2%;
+
+            cursor:pointer;
+            }
+
+            #previous:hover
+            {
+              z-index:1000;
+              background-color:yellow;
+              padding:3px;
+            }
+
+            #next:hover
+            {
+              z-index:1000;
+              background-color:yellow;
+              padding:3px;
+            }
+
+
+            #bottomColor {
+              z-index:90;
+            position:fixed;
+            bottom: 0px;
+            width:100%;
+            height: 6%;
+            background-color: white;
+            border-top:solid black 1px;
+            }
+
+            input[type=text] {
+            z-index:1000;
+            cursor:pointer;
+            border: none;
+            padding: 3px;
+            background: transparent;
+            color:black;
+            font-size: 40px;
+            outline: none;
+            text-align:center;
+            width:200px;
+
+            border-style: solid; 
+            border-width: 0px 0px 3px 0px; 
+            border-color: black;
+            position: fixed;
+            left: 2%;
+            top:2%;
+            text-transform:uppercase;
+            letter-spacing:-1px;
+            font-family:arial,helvetica,sans-serif;
+            font-weight: bold;
+            }
+
+            ::-webkit-input-placeholder {
+                 color: black;
+            }
+
+            :-moz-placeholder { /* Firefox 18- */
+                 color: black;  
+            }
+
+            ::-moz-placeholder {  /* Firefox 19+ */
+                 color: black;  
+            }
+
+            :-ms-input-placeholder {
+                 color: black;
+            }
+
+            :focus::-webkit-input-placeholder {
+                   text-indent: -999px
+            }
+
+
+            :focus::-moz-placeholder {
+                   text-indent: -999px
+            }
+
+
+
+
+<% for(var svgPass=0; svgPass<locals.dataStore; svgPass++) { %>
+  #layer_<%= svgPass %> {
+              <% var minusValue = svgPass * 100; %>
+              <% var circleWidth = 900 - minusValue; %>
+              z-index: <%= svgPass %>;
+              position:absolute;
+              left:50%;
+              -webkit-animation:spin_<%= svgPass %> <%= Math.floor(4 + Math.random() * 9)%>s linear infinite;
+              -moz-animation:spin_<%=svgPass%> <%= Math.floor(4 + Math.random() * 9)%>s linear infinite;
+              animation:spin_<%=svgPass%> <%= Math.floor(4 + Math.random() * 9)%>s linear infinite;
+              top: 50%;
+              width: <%= circleWidth %>px;
+              <% console.log(circleWidth); %>
+              height: <%= circleWidth %>px;
+              margin-top: -<%= circleWidth/2 %>px; /* Half the height */
+              margin-left: -<%= circleWidth/2 %>px; /* Half the width */
+              filter: blur(5px);
+              <!-- <% if ((svgPass + 1) !== locals.dataStore) {%>
+              -webkit-filter: blur(5px);
+              -moz-filter: blur(5px);
+              -o-filter: blur(5px);
+              -ms-filter: blur(5px);
+              <% } %> -->
+  }
+
+
+            <% if(svgPass % 2 == 0) { var spinDirection = -360 } else { var spinDirection = 360 } %>
+            @-moz-keyframes spin_<%= svgPass %> { 100% { -moz-transform: rotate(<%= spinDirection %>deg); } }
+            @-webkit-keyframes spin_<%= svgPass %> { 100% { -webkit-transform: rotate(<%= spinDirection %>deg); } }
+            @keyframes spin_<%= svgPass %> { 100% { -webkit-transform: rotate(<%= spinDirection %>deg); transform:rotate(<%= spinDirection %>deg); } }
+            <% } %>
+
+        </style>
+
+
+
+    </head>
+    <body>
+    <% for(var svgPass=0; svgPass<locals.dataStore; svgPass++) { %>
+        <!-- Add your site or application content here -->
+<% var size = 700 %>
+
+        <svg version="1.1" id="layer_<%= svgPass %>" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="<%= size %>px"
+          height="<%= size %>px" viewBox="0 0 1791.179 1794.18" enable-background="new 0 0 1791.179 1794.18" xml:space="preserve">
+	
+		<g style="stroke:black; stroke-width:3; ">	
+			
+				<polygon points="897.3,899.711 897.574,899.864 897.3,899.398 	"/>
+		   
+			<polygon points="897.3,900.035 897.574,899.864 897.3,899.871 	"/>
+			<clippath id='<%= svgPass %>clip1'>
+				<path d="M897.493,899.864l416.52-786.392c-124.25-65.97-265.958-103.656-416.44-103.656c-0.092,0-0.435,0-0.435,0v889.582
+				L897.493,899.864z"/>
+			</clippath>
+			<clippath id='<%= svgPass %>clip2'>
+			<path d="M897.138,10.435c-164,0.049-318.08,44.623-450.104,122.303l450.104,766.661V10.435z"/>
+			</clippath>
+			<clippath id='<%= svgPass %>clip3'>
+			<path d="M1786.781,880.446c-3.513-163.962-51.392-316.997-132.117-447.587l-757.09,467.005L1786.781,880.446z"/>
+			</clippath>
+			<polygon points="897.3,900.382 897.574,899.864 897.3,900.035 	"/>
+			<clippath id='<%= svgPass %>clip4'>
+			<path d="M1654.664,432.859c-82.996-134.265-200.704-244.801-340.61-319.079L897.574,899.864L1654.664,432.859z"/>
+			</clippath>
+			<polygon points="897.3,899.871 897.574,899.864 897.3,899.711 	"/>
+			
+			<clippath id='<%= svgPass %>clip5'>
+			<path d="M480.932,1685.948c124.176,65.929,266.206,103.301,416.206,103.347V900.382L480.932,1685.948z"/>
+			</clippath>
+			<clippath id='<%= svgPass %>clip6'>
+			<path d="M897.138,899.398L447.115,132.737c-136.204,80.138-249.233,195.506-326.462,333.594l776.484,433.38V899.398z"/>
+			</clippath>
+			<clippath id='<%= svgPass %>clip7'>
+			<path d="M897.138,900.382v889.435c0,0,0.343,0,0.435,0c164.349,0,318.282-44.845,450.379-122.564L897.493,899.996L897.138,900.382z
+				"/>
+				</clippath>
+			<clippath id='<%= svgPass %>clip8'>
+			<path d="M1786.781,880.446l-889.207,19.418l776.8,433.533c71.738-128.265,112.63-276.124,112.63-433.533
+				C1787.004,893.374,1786.919,886.904,1786.781,880.446z"/>
+				</clippath>
+		    <clippath id='<%= svgPass %>clip9'>
+			<path d="M1347.951,1666.992c136.204-80.139,249.19-195.509,326.423-333.595l-776.8-433.533L1347.951,1666.992z"/>
+			</clippath>
+			<clippath id='<%= svgPass %>clip10'>
+			<path d="M897.138,899.711l-776.444-433.38C48.954,594.595,8.103,742.456,8.103,899.864c0,6.49,0.024,12.961,0.162,19.418
+				l888.873-19.411V899.711z"/>
+				</clippath>
+				<clippath id='<%= svgPass %>clip11'>
+			<path d="M897.138,900.035l-756.735,466.834c82.997,134.266,200.663,244.802,340.569,319.079l416.166-785.566V900.035z"/>
+			</clippath>
+			<clippath id='<%= svgPass %>clip12'>
+			<path d="M897.138,899.871L8.285,919.282c3.513,163.963,51.351,316.996,132.077,447.587l756.775-466.834V899.871z"/>
+			</clippath>
+		</g>
+
+
+
+        <% if (locals.data) { %>
+            <% for (var i = 1; i < 13; i++) { %>
+                <% if (typeof locals.data[svgPass][i].photos !== 'undefined' && locals.data[svgPass][i].photos!=null) { %>
+	<image class="desaturate" clip-path="url(#<%= svgPass %>clip<%=i%>)" height="100%" width="100%" xlink:href="<%= locals.data[svgPass][i].photos[0].original_size.url %>" preserveAspectRatio="xMidYMin slice"></image>
+  <% } else if (typeof locals.data[svgPass][i-1].photos !== 'undefined' && locals.data[svgPass][i-1].photos!=null ){%>
+  <image clip-path="url(#<%= svgPass %>clip<%=i%>)" height="100%" width="100%" xlink:href="<%= locals.data[svgPass][i-1].photos[0].original_size.url %>" preserveAspectRatio="xMidYMin slice"></image>
+  <% }  else if (typeof locals.data[svgPass][i-2].photos !== 'undefined' && locals.data[svgPass][i-2].photos!=null ){%>
+	<image clip-path="url(#<%= svgPass %>clip<%=i%>)" height="100%" width="100%" xlink:href="<%= locals.data[svgPass][i-2].photos[0].original_size.url %>" preserveAspectRatio="xMidYMin slice"></image>
+  <% } else if (typeof locals.data[svgPass][i-3].photos !== 'undefined' && locals.data[svgPass][i-3].photos!=null ){%>
+	<image clip-path="url(#<%= svgPass %>clip<%=i%>)" height="100%" width="100%" xlink:href="<%= locals.data[svgPass][i-3].photos[0].original_size.url %>" preserveAspectRatio="xMidYMin slice"></image>
+  <% } %>
+  <% } %>
+</svg>
+        <% } %>
+        <% } %>
+ <form name="data" action="view.ejs" method="get">
+   <input type="text" placeholder="<%= queryData%>" name="data">
+          <input type="submit" value="Submit">
+        </form>
+
+        <div id='songTitle'></div>
+        <div id='next'>&#9654;</div>
+        <div id='previous'>&#9664;</div>
+        <div id='jukebox'>Jukebox</div>
+        <div id='bottomColor'></div>
+
+
+<script src="http://connect.soundcloud.com/sdk.js"></script>
+        <script>
+$(":submit").hide();
+            SC.initialize({
+                  client_id: 'a2befdf458b195d9dc90a309e9015eb4'
+            });
+             var requestedTrack = '<%= queryData %>';
+             console.log(requestedTrack);
+             $("#jukeboxName").html(requestedTrack);
+
+
+            // find all sounds of buskers licensed under 'creative commons share alike'
+            SC.get('/tracks', { q: requestedTrack, license: 'cc-by-sa' }, function(tracks) {
+                  var i = 0;
+                  var trackTitle = tracks[i].title;
+                  console.log(trackTitle);
+                  var track_url = "/tracks/" + tracks[i].id;
+                  console.log(track_url);
+                  SC.stream(track_url, {autoPlay: true});
+                  $('#songTitle').append(trackTitle);
+             $("#next").click(function() {
+
+              if( i < tracks.length) {
+                  i++;
+                  soundManager.stopAll();
+                  trackTitle = tracks[i].title;
+                  console.log(trackTitle);
+                  var track_url = "/tracks/" + tracks[i].id;
+                  console.log(track_url);
+                  SC.stream(track_url, {autoPlay: true});
+                  $('#songTitle').html(trackTitle);
+                }
+                });
+
+                $("#previous").click(function() {
+                    if( i > 0 ) {
+                  i--;
+                  soundManager.stopAll();
+                  trackTitle = tracks[i].title;
+                  console.log(trackTitle);
+                  var track_url = "/tracks/" + tracks[i].id;
+                  console.log(track_url);
+                  SC.stream(track_url, {autoPlay: true});
+                  $('#songTitle').html(trackTitle);
+                }
+
+
+                });
+            });
+        </script>
+
+
+
+
+    </body>
+</html>
