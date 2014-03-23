@@ -16,30 +16,38 @@ var oauth = {
   token_secret: 'ExLHAr9JtVhaBqXhrtWcMURLMz0o6L00S6gk6OYrPvfDvwF7E6'
 };
 
+// dataStore holds the information from previous searches
 var dataStore = [];
 
-// Configure our HTTP server to respond with Hello World to all requests.
+// Configure our HTTP server.
 var server = http.createServer(function (request, response) {
+
+  // Next two lines get the word that the user requests and stores as queryData
     var queryData = url.parse(request.url, true).query;
     queryData = queryData.data;
 
+   // Set up an empty array that will later be filled with response from Tumblr
    var finalData = [];
 
+   // Tumblr authentication requirments for using their api
     var user = new tumblr.User(oauth);
-     var tagged = new tumblr.Tagged(oauth);
+    var tagged = new tumblr.Tagged(oauth);
 
-function searchTumblr(item, callback) {
+  // API call to tumblr
+    function searchTumblr(item, callback) {
 
             tagged.search(item, function(error, res) {
                     if (error) {
                           throw new Error(error);
                     }
+
+                    // Push API response into array
                     finalData.push(res);
                     callback();
 
             });
 
-}
+    }
 
     response.writeHead(200, {'Content-Type': 'text/html'});
 
@@ -48,19 +56,14 @@ function searchTumblr(item, callback) {
           dataStore.push(queryData);
 
           async.each(dataStore, searchTumblr, function(err){
-                          console.log(finalData.length);
-                          console.log(dataStore);
-
-                          console.log(finalData);
                           if(typeof finalData !== 'undefined' && finalData!=null && finalData.length>0) {
 
 			                          response.write(ejs.render(view, {locals: {
-			                                data: finalData,
+			                                data: finalData.reverse(),
 			                                dataStore: dataStore.length,
                                       queryData: queryData
 			                           }}));
 
-                                console.log("made it here");
 			                          response.end();
 
 			                   } else {
