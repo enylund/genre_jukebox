@@ -19,6 +19,11 @@ var oauth = {
 // dataStore holds the information from previous searches
 var dataStore = [];
 
+function shuffle(o){ //v1.0
+      for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+          return o;
+};
+
 // Configure our HTTP server.
 var server = http.createServer(function (request, response) {
 
@@ -28,6 +33,7 @@ var server = http.createServer(function (request, response) {
 
    // Set up an empty array that will later be filled with response from Tumblr
    var finalData = [];
+   console.log(finalData);
 
    // Tumblr authentication requirments for using their api
     var user = new tumblr.User(oauth);
@@ -41,9 +47,18 @@ var server = http.createServer(function (request, response) {
                           throw new Error(error);
                     }
 
+                    if(res){
+                    for (var i = 0; i<res.length; i++) {
+                      if (typeof res[i] !== 'undefined' && typeof res[i].photos !== 'undefined' && res[i].photos!=null) {
+                      finalData.push(res[i].photos[0].original_size.url);
+                      }
+                    }
+                    }
+                    console.log("NEW");
+                    shuffle(finalData);
                     // Push API response into array
-                    finalData.push(res);
                     callback();
+                    finalData.length = 0;
 
             });
 
@@ -57,13 +72,13 @@ var server = http.createServer(function (request, response) {
 
           async.each(dataStore, searchTumblr, function(err){
                           if(typeof finalData !== 'undefined' && finalData!=null && finalData.length>0) {
-
+                                console.log(finalData.length);
 			                          response.write(ejs.render(view, {locals: {
-			                                data: finalData.reverse(),
+			                                data: finalData,
 			                                dataStore: dataStore.length,
                                       queryData: queryData
 			                           }}));
-
+                                console.log(finalData.length);
 			                          response.end();
 
 			                   } else {
