@@ -7,6 +7,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+        <script type="text/javascript" src="http://to-have-and-to-owe.com/coolclock.js"></script>
+        <script type="text/javascript" src="http://to-have-and-to-owe.com/moreskins.js"></script>
+
 
 
         <style>
@@ -199,6 +202,12 @@
               height:100%;
             }
 
+            #clockid {
+              position:fixed;
+              top:25px;
+              left:25px;
+            }
+
 
 
         </style>
@@ -206,7 +215,7 @@
 
     </head>
     <body>
-    <% console.log(locals.data); %>
+    <% console.log(directory); %>
     <% for(var svgPass=0; svgPass<1; svgPass++) { %>
         <% if (locals.data) { %>
             <% for (var i = 1; i < 5; i++) { %>
@@ -217,70 +226,69 @@
         <% } %>
     <% } %>
 
-    <!--  <img id='image_back' src='http://to-have-and-to-owe.com/marble_2.jpg' > -->
-<!--
- <form name="data" action="view.ejs" method="get">
-   <input type="text" placeholder="<%= queryData%>" name="data">
-          <input type="submit" value="Submit">
-        </form>
--->
-<!--
-        <div id='songTitle'></div>
-        <div id='next'>&#9654;</div>
-        <div id='previous'>&#9664;</div>
-        <div id='jukebox'>Jukebox</div>
-        <div id='bottomColor'></div>
--->
+
+    <canvas id="clockid" class="CoolClock:mySkin:100"></canvas>
+
 
 <script src="http://connect.soundcloud.com/sdk.js"></script>
         <script>
-$(":submit").hide();
-            SC.initialize({
-                  client_id: 'a2befdf458b195d9dc90a309e9015eb4'
-            });
+//$(":submit").hide();
+//            SC.initialize({
+//                  client_id: 'a2befdf458b195d9dc90a309e9015eb4'
+//            });
              var requestedTrack = '<%= queryData %>';
-             console.log(requestedTrack);
-             $("#jukeboxName").html(requestedTrack);
+//             console.log(requestedTrack);
+ //            $("#jukeboxName").html(requestedTrack);
 
 
             // find all sounds of buskers licensed under 'creative commons share alike'
-            SC.get('/tracks', { q: requestedTrack, license: 'cc-by-sa' }, function(tracks) {
-                  var i = 0;
-                  var trackTitle = tracks[i].title;
-                  console.log(trackTitle);
-                  var track_url = "/tracks/" + tracks[i].id;
-                  console.log(track_url);
-                  SC.stream(track_url, {autoPlay: true});
-                  $('#songTitle').append(trackTitle);
-             $("#next").click(function() {
+//            SC.get('/tracks', { q: requestedTrack, license: 'cc-by-sa' }, function(tracks) {
+//                  var i = 0;
+//                  var trackTitle = tracks[i].title;
+//                  var track_url = "/tracks/" + tracks[i].id;
+//                  SC.stream(track_url, {autoPlay: true});
+//                  $('#songTitle').append(trackTitle);
+//             $("#next").click(function() {
 
-              if( i < tracks.length) {
-                  i++;
-                  soundManager.stopAll();
-                  trackTitle = tracks[i].title;
-                  console.log(trackTitle);
-                  var track_url = "/tracks/" + tracks[i].id;
-                  console.log(track_url);
-                  SC.stream(track_url, {autoPlay: true});
-                  $('#songTitle').html(trackTitle);
-                }
-                });
+//              if( i < tracks.length) {
+//                  i++;
+//                  soundManager.stopAll();
+//                  trackTitle = tracks[i].title;
+//                  console.log(trackTitle);
+//                  var track_url = "/tracks/" + tracks[i].id;
+//                  console.log(track_url);
+//                  SC.stream(track_url, {autoPlay: true});
+//                  $('#songTitle').html(trackTitle);
+//                }
+//                });
 
-                $("#previous").click(function() {
-                    if( i > 0 ) {
-                  i--;
-                  soundManager.stopAll();
-                  trackTitle = tracks[i].title;
-                  console.log(trackTitle);
-                  var track_url = "/tracks/" + tracks[i].id;
-                  console.log(track_url);
-                  SC.stream(track_url, {autoPlay: true});
-                  $('#songTitle').html(trackTitle);
-                }
+//                $("#previous").click(function() {
+//                    if( i > 0 ) {
+//                  i--;
+//                  soundManager.stopAll();
+//                  trackTitle = tracks[i].title;
+//                  console.log(trackTitle);
+//                  var track_url = "/tracks/" + tracks[i].id;
+//                  console.log(track_url);
+//                  SC.stream(track_url, {autoPlay: true});
+//                  $('#songTitle').html(trackTitle);
+//                }
 
 
-                });
-            });
+//                });
+//            });
+
+            var nextYear = parseInt(requestedTrack) + 1;
+            console.log(nextYear);
+
+            if (nextYear < 1950 || nextYear > 2014 || nextYear == 2015) {
+              window.location.href = "http://127.0.0.1:5000/" + 1950;
+              nextYear = 1950;
+            }
+
+            setTimeout(function(){
+            window.location.href = "http://127.0.0.1:5000/" + nextYear;
+            }, 10000);
         </script>
     </body>
 </html>

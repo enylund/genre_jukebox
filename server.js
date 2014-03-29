@@ -27,13 +27,22 @@ function shuffle(o){ //v1.0
 // Configure our HTTP server.
 var server = http.createServer(function (request, response) {
 
+
+  console.log(__dirname);
   // Next two lines get the word that the user requests and stores as queryData
     var queryData = url.parse(request.url, true).query;
-    queryData = queryData.data;
+    console.log(request.url);
+    if(request.url == '/') {
+      queryData = 1950;
+    } else {
+      var requestedDate = request.url;
+      requestedDate = requestedDate.split("/");
+      console.log(requestedDate[1]);
+    queryData = requestedDate[1];
+    }
 
    // Set up an empty array that will later be filled with response from Tumblr
    var finalData = [];
-   console.log(finalData);
 
    // Tumblr authentication requirments for using their api
     var user = new tumblr.User(oauth);
@@ -41,6 +50,15 @@ var server = http.createServer(function (request, response) {
 
   // API call to tumblr
     function searchTumblr(item, callback) {
+
+          console.log(item);
+
+          var testForNumber = parseInt(item);
+
+          if(isNaN(testForNumber) == true) {
+            item = 1950;
+          }
+
 
             tagged.search(item, function(error, res) {
                     if (error) {
@@ -70,13 +88,24 @@ var server = http.createServer(function (request, response) {
 
           dataStore.push(queryData);
 
+          var testForNumber = parseInt(queryData);
+
+          if(isNaN(testForNumber) == true) {
+            console.log("hi");
+            queryData = 1910;
+          }
+
           async.each(dataStore, searchTumblr, function(err){
                           if(typeof finalData !== 'undefined' && finalData!=null && finalData.length>0) {
                                 console.log(finalData.length);
+
+
+
 			                          response.write(ejs.render(view, {locals: {
 			                                data: finalData,
 			                                dataStore: dataStore.length,
-                                      queryData: queryData
+                                      queryData: queryData,
+                                      directory: __dirname
 			                           }}));
                                 console.log(finalData.length);
 			                          response.end();
